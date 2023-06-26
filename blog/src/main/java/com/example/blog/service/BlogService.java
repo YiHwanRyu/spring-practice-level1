@@ -44,8 +44,11 @@ public class BlogService {
         // 해당 post가 DB에 존재하는지 확인
         Post post = findPost(id);
         // post 수정(영속성 컨텍스트의 변경감지를 통해, 즉, requestDto에 들어온 객체로 post 객체(entity)를 업데이트 시킴)
-        if(requestDto.getPassword().equals(post.getPassword())) post.update(requestDto);
-        else return new PostResponseDto(post);
+        if(requestDto.getPassword().equals(post.getPassword())) {
+            post.update(requestDto);
+        } else {
+            return new PostResponseDto(post);
+        }
         // responseDto 로 반환
         return new PostResponseDto(post);
     }
@@ -54,8 +57,11 @@ public class BlogService {
         // 해당 post가 DB에 존재하는지 확인
         Post post = findPost(id);
         // post 삭제
-        if(post.getPassword().equals(password)) blogRepository.delete(post);
-        else return false;
+        if(post.getPassword().equals(password)) {
+            blogRepository.delete(post);
+        } else {
+            return false;
+        }
         // boolean으로 반환
         return true;
     }
