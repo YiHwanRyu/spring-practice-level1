@@ -46,8 +46,6 @@ public class PostService {
         // post 수정(영속성 컨텍스트의 변경감지를 통해, 즉, requestDto에 들어온 객체로 post 객체(entity)를 업데이트 시킴)
         if(requestDto.getPassword().equals(post.getPassword())) {
             post.update(requestDto);
-        } else {
-            return new PostResponseDto(post);
         }
         // responseDto 로 반환
         return new PostResponseDto(post);
@@ -59,11 +57,10 @@ public class PostService {
         // post 삭제
         if(post.getPassword().equals(password)) {
             postRepository.delete(post);
-        } else {
-            return false;
+            return true;
         }
         // boolean으로 반환
-        return true;
+        return false;
     }
 
     private Post findPost(Long id) {
