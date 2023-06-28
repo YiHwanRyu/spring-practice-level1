@@ -3,33 +3,33 @@ package com.example.blog.service;
 import com.example.blog.dto.PostRequestDto;
 import com.example.blog.dto.PostResponseDto;
 import com.example.blog.entity.Post;
-import com.example.blog.repository.BlogRepository;
+import com.example.blog.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class BlogService {
-    private BlogRepository blogRepository;
+public class PostService {
+    private PostRepository postRepository;
 
     //@Autowired // 생성자 1개일 때는 생략가능
-    public BlogService(BlogRepository blogRepository) {
-        this.blogRepository = blogRepository;
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
     }
 
     public PostResponseDto createPost(PostRequestDto requestDto) {
         // RequsetDto -> Entity(데이터베이스 교환 객체)
         Post post = new Post(requestDto);
         // DB 저장
-        Post savePost = blogRepository.save(post);
+        Post savePost = postRepository.save(post);
         // Entity -> ResponseDto
         PostResponseDto postResponseDto = new PostResponseDto(savePost);
         return postResponseDto;
     }
 
     public List<PostResponseDto> getPosts() {
-        return blogRepository.findAllByOrderByCreatedAtDesc().stream().map(PostResponseDto::new).toList();
+        return postRepository.findAllByOrderByCreatedAtDesc().stream().map(PostResponseDto::new).toList();
     }
 
     public PostResponseDto getPost(Long id) {
@@ -58,7 +58,7 @@ public class BlogService {
         Post post = findPost(id);
         // post 삭제
         if(post.getPassword().equals(password)) {
-            blogRepository.delete(post);
+            postRepository.delete(post);
         } else {
             return false;
         }
@@ -67,7 +67,7 @@ public class BlogService {
     }
 
     private Post findPost(Long id) {
-        return blogRepository.findById(id).orElseThrow(() ->
+        return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 포스트는 존재하지 않습니다.")
         );
     }
